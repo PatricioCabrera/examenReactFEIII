@@ -1,82 +1,63 @@
 import React, { useState } from "react";
 import { Card } from "./Card";
-import { Albums } from "./Albums";
 
 export function Form() {
   // state variables for email and password inputs
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   // state variable for album name input
-  const [albumName, setAlbumName] = useState("");
+  const [albumName, setAlbumName] = useState("")
 
   // state variable for error message
-  const [error, setError] = useState("");
+  const [error, setError] = useState("")
 
   // state variable for card component
-  const [card, setCard] = useState(null);
+  const [card, setCard] = useState(null)
 
-  // state variable for albums component
-  const [albums, setAlbums] = useState(null);
+  let selectedAlbum = {}
 
-  // array of valid album names
   const validAlbums = [
-    "Nemesis (Special Edition)",
-    "Polaris (Bonus Track Version)",
-    "Stratovarius (Original Version)",
-    "Black Diamond",
-    "Visions",
-    "Episode (Original Version)",
-    "Will the Sun Rise? (Live)",
-    "Fourth Dimension",
-    "Dreamspace (Original Version)",
-    "Twilight Time",
-    "Fright Night",
-    "Darkest Hours",
-    "Maniac Dance",
-    "A Million Light Years Away",
-    "Hunting High and Low",
-    "S.O.S.",
-    "Father Time",
+    {
+      name: "Nemesis (Special Edition)",
+      image: "https://th.bing.com/th/id/R.c9fcbb0d9297d7b4e8515ac54952e8fb?rik=O4oEITdwLsb8LA&pid=ImgRaw&r=0",
+    },
+    {
+      name: "Polaris",
+      image: "https://img.discogs.com/uWxlBdpavnu0hAtoOZzo4WCRRy4=/fit-in/464x464/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-10360858-1495983286-3784.jpeg.jpg",
+    }
   ];
 
-  // event handler for submit button
   function handleSubmit(e) {
-    // prevent default behavior of form submission
     e.preventDefault();
 
-    // validate email input
-    if (email.length < 3 || email.startsWith(" ")) {
-      setError("Por favor chequea que la información sea correcta");
+    if (!email.toLowerCase().match(/^ ( [a-z0-9_\\.-]+)@ ( [\\da-z\\.-]+)\\. ( [a-z\\.] {2,6})$/)) {
+      setError("Please check your email")
       return;
     }
 
-    // validate password input
     if (password.length < 6) {
-      setError("Por favor chequea que la información sea correcta");
+      setError("Please check your password");
       return;
     }
 
     // validate album name input
-    if (!validAlbums.includes(albumName)) {
+    if (!validAlbums.map(album => album.name.toLowerCase()).includes(albumName.toLowerCase())) {
       setError("Por favor ingresa un nombre de album válido");
       return;
     }
+    // save album object if it's a valid Album
+    else selectedAlbum = validAlbums.indexOf(validAlbums.find(album => album.name.toLowerCase() === albumName.toLowerCase()));
+    
 
     // clear error message
     setError("");
 
     // create card component with email, password and album name props
-    const newCard = <Card email={email} password={password} albumName={albumName} />;
+    const newCard = <Card email={email} password={password} selectedAlbum={validAlbums[selectedAlbum]} />;
 
     // update card state variable
     setCard(newCard);
-
-    // create albums component with validAlbums prop
-    const newAlbums = <Albums validAlbums={validAlbums} />;
-
-    // update albums state variable
-    setAlbums(newAlbums);
   }
 
   return (
@@ -112,8 +93,6 @@ export function Form() {
       {error && <p className="error">{error}</p>}
 
       {card && card} {/* render card component if it exists */}
-
-      {albums && albums} {/* render albums component if it exists */}
       
     </div>
   );

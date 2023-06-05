@@ -6,7 +6,8 @@ function App() {
   return (
     <>
       <div>
-        <h1>Stratovarius album</h1>
+        <h1>Stratovarius albums</h1>
+        <h2>Please login to search for your favorite albums</h2>
         <Form />
       </div>
     </>
